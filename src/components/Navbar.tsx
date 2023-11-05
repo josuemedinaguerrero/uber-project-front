@@ -56,7 +56,7 @@ const Navbar = () => {
               <Button text="Carros" type="button" width="w-32" />
               <div className="w-40 relative">
                 <Button text="Conductores" type="button" width="w-full" handleClick={() => navigate("/driver-documents")} />
-                <span className="cursor-pointer absolute -top-1 -right-1 bg-red-700 rounded-full w-5 h-5 flex justify-center items-center text-white text-sm font-bold">{pendingDocuments}</span>
+                <span className="cursor-pointer absolute -top-1 -right-1 bg-red-600 rounded-full w-5 h-5 flex justify-center items-center text-white text-sm font-bold">{pendingDocuments}</span>
               </div>
             </>
           )}

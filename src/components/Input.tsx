@@ -14,7 +14,7 @@ const Input: React.FC<InputProps> = ({ register, name, placeholder, required, ty
   return (
     <div className={clsx("flex items-center justify-between", width)}>
       <div className="w-[30%]">{placeholder}</div>
-      <input {...register(name)} required={required} type={type} className="bg-gray-100 w-[70%] py-2 px-3 rounded-lg outline-none" />
+      <input {...register(name)} required={required} type={type} className="bg-gray-100 w-[70%] py-2 px-3 rounded-full outline-none" />
     </div>
   );
 };
