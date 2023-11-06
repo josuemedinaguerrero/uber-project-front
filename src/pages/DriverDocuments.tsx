@@ -22,7 +22,7 @@ const DriverDocuments = () => {
 
   useEffect(() => {
     axios.get(`${urlServer}/drivers`).then((res) => {
-      setDrivers(res?.data?.filter((d: Driver) => d.DOCUMENTS && !d.VERIFIED_DOCUMENTS));
+      setDrivers(res?.data?.filter((d: Driver) => d.DOCUMENTS));
     });
   }, [localStorage.getItem("user")]);
 
@@ -39,8 +39,6 @@ const DriverDocuments = () => {
     async (driver: Driver) => {
       try {
         const sameDriver = driver.CEDULE === driverSelected?.CEDULE;
-
-        console.log({ driver, driverSelected, sameDriver });
 
         if (!sameDriver) {
           let [doc_cedule, doc_registration, doc_license] = await Promise.all([
@@ -72,11 +70,17 @@ const DriverDocuments = () => {
     formData.append("destination", driverSelected!.EMAIL);
     formData.append("body", data?.comment);
     formData.append("subject", "Documentos | UBER");
-    formData.append("verified_documents", data?.verify);
+    formData.append("verified_documents", data?.verify ? "1" : "2");
 
     try {
       const { data } = await axios.put(`${urlServer}/verificate-documents`, formData);
-      console.log({ data });
+
+      if (data?.error) {
+        toast.error(data?.message);
+        return;
+      }
+
+      toast.success(data?.message);
     } catch (_) {
       toast.error("Ha ocurrido un error");
     }

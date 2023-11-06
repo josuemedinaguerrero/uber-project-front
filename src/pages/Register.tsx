@@ -24,17 +24,16 @@ const Register = () => {
 
       const res = await axios.post(`${urlServer}/register`, formData);
 
-      console.log(res.data);
+      if (res?.data?.error) throw new Error(res?.data?.message);
 
-      if (res?.data?.error) {
-        toast.error(res?.data?.message);
-        return;
-      }
+      const resProfile = await axios.post(`${urlServer}/create-profile`, formData);
+
+      if (resProfile?.data?.error) throw new Error(resProfile?.data?.message);
 
       toast.success(res?.data?.message);
       navigate("/");
-    } catch (_) {
-      toast.error("Error durante la petición!");
+    } catch (error: any) {
+      toast.error(error?.message);
     }
   };
 

@@ -22,26 +22,12 @@ const Login = () => {
 
       const res = await axios.post(`${urlServer}/login`, formData);
 
-      console.log(res.data);
-
       if (res?.data?.error) {
         toast.error(res?.data?.message);
         return;
       }
 
       toast.success(res?.data?.message);
-
-      // const res = {
-      //   data: {
-      //     data: {
-      //       username: "josue",
-      //       email: "josue@test.com",
-      //       cedule: "0929995744",
-      //       rol: "DRIVER",
-      //       documents: 0,
-      //     },
-      //   },
-      // };
 
       localStorage.setItem("user", JSON.stringify(res.data?.data));
       navigate("/");

@@ -45,6 +45,7 @@ const CreateDriver = () => {
       }
 
       toast.success(res.data.message);
+      navigate("/login");
     } catch (err) {
       console.log({ err });
     }

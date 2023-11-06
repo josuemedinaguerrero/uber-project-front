@@ -40,8 +40,6 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  console.log(user);
-
   return (
     user?.CEDULE && (
       <div className="w-full h-20 absolute top-0 flex items-center justify-between">

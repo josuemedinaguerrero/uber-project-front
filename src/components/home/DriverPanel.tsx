@@ -103,10 +103,20 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
           </>
         )}
 
-        {!user?.VERIFIED_DOCUMENTS && (
+        {user.DOCUMENTS && (
           <>
-            <div>En estos momentos estamos revisando tus documentos, por favor, ten un poco de paciencia...</div>
-            <Lottie style={{ width: "70%" }} animationData={animationDocuments} />
+            {!user.VERIFIED_DOCUMENTS && (
+              <>
+                <div>En estos momentos estamos revisando tus documentos, por favor, ten un poco de paciencia...</div>
+                <Lottie style={{ width: "70%" }} animationData={animationDocuments} />
+              </>
+            )}
+
+            {user.VERIFIED_DOCUMENTS === 2 && (
+              <div className="bg-red-500 py-2 px-4 rounded-2xl text-white text-sm">Sus documentos han sido rechazados, por favor, revisar su correo electrónico para mayor información.</div>
+            )}
+
+            {user.VERIFIED_DOCUMENTS === 1 && <div className="bg-green-500 py-2 px-4 rounded-2xl text-white text-sm">Felicidades, sus documentos cumplen con los requisitos especificados.</div>}
           </>
         )}
       </div>
