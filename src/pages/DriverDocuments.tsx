@@ -22,7 +22,7 @@ const DriverDocuments = () => {
 
   useEffect(() => {
     axios.get(`${urlServer}/drivers`).then((res) => {
-      setDrivers(res?.data?.filter((d: Driver) => d.DOCUMENTS));
+      setDrivers(res?.data?.filter((d: Driver) => d.STATE_DOCUMENTS));
     });
   }, [localStorage.getItem("user")]);
 
@@ -86,6 +86,8 @@ const DriverDocuments = () => {
     }
   };
 
+  console.log({ drivers });
+
   return (
     <div className="w-full text-center">
       <h1 className="font-bold my-5 text-2xl">Conductores</h1>
@@ -102,7 +104,11 @@ const DriverDocuments = () => {
           <div key={driver.CEDULE} className="w-full flex flex-col items-center">
             <div
               onClick={() => handleClickDriver(driver)}
-              className={clsx("w-full flex items-center cursor-pointer transition p-3 hover:bg-gray-100", driverSelected?.CEDULE === driver.CEDULE && "bg-gray-100")}
+              className={clsx(
+                "w-full flex items-center cursor-pointer transition p-3 hover:bg-gray-100",
+                driverSelected?.CEDULE === driver.CEDULE && "bg-gray-100",
+                driver.STATE_DOCUMENTS === 3 && "bg-red-300 hover:bg-red-300"
+              )}
             >
               <div className="w-[15%]">{driver.CEDULE}</div>
               <div className="w-[18%]">{driver.NAMES}</div>
@@ -110,7 +116,7 @@ const DriverDocuments = () => {
               <div className="w-[20%]">{driver.EMAIL}</div>
               <div className="w-[15%]">{driver.PHONE}</div>
               <div className="w-[15%]">
-                <span className={clsx(!driver.VERIFIED_DOCUMENTS && "bg-red-600 inline-block rounded-full min-w-[25px] text-white")}>{driver.STATUS}</span>
+                <span className="bg-red-600 inline-block rounded-full min-w-[25px] text-white">{driver.STATUS}</span>
               </div>
             </div>
             <div className={clsx("w-[80%] mt-3 mb-5", driverSelected?.CEDULE !== driver.CEDULE && "hidden")}>
@@ -144,16 +150,19 @@ const DriverDocuments = () => {
                   ))}
                 </div>
               </div>
-              <form onSubmit={handleSubmit(submitComment)} className="w-full mt-2 flex flex-col items-center gap-2">
-                <div className="flex gap-2">
-                  <input type="checkbox" {...register("verify")} id="verify" />
-                  <label htmlFor="verify">Verificar documentos</label>
-                </div>
-                <div className="w-full flex items-center gap-2">
-                  <Input register={register} placeholder="Enviar comentario..." name="comment" />
-                  <Button type="submit" text="Enviar" width="w-[200px]" Icon={AiOutlineSend} />
-                </div>
-              </form>
+
+              {driver.STATE_DOCUMENTS !== 2 && driver.STATE_DOCUMENTS !== 1 && (
+                <form onSubmit={handleSubmit(submitComment)} className="w-full mt-2 flex flex-col items-center gap-2">
+                  <div className="flex gap-2">
+                    <input type="checkbox" {...register("verify")} id="verify" />
+                    <label htmlFor="verify">Verificar documentos</label>
+                  </div>
+                  <div className="w-full flex items-center gap-2">
+                    <Input register={register} placeholder="Enviar comentario..." name="comment" />
+                    <Button type="submit" text="Enviar" width="w-[200px]" Icon={AiOutlineSend} />
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         ))}

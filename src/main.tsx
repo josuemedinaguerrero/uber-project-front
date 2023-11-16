@@ -15,6 +15,8 @@ import Modal from "react-modal";
 import "./index.css";
 import CreateDriver from "./pages/CreateDriver";
 import DriverDocuments from "./pages/DriverDocuments";
+import ConfigureUser from "./pages/ConfigureUser";
+import ConfigurationAdminPanel from "./pages/ConfigurationAdminPanel";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -55,10 +57,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path="/create-route"
+              path="/route/:id"
               element={
                 <ProtectedRoute>
                   <CreateRoute />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/configure-user"
+              element={
+                <ProtectedRoute>
+                  <ConfigureUser />
                 </ProtectedRoute>
               }
             />
@@ -92,6 +102,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <Redirect>
                   <CreateDriver />
                 </Redirect>
+              }
+            />
+            <Route
+              path="/configuration-admin"
+              element={
+                <ProtectedRoute>
+                  <ConfigurationAdminPanel />
+                </ProtectedRoute>
               }
             />
           </Routes>

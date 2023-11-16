@@ -54,7 +54,7 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
 
   return (
     <div className="mt-10">
-      {!user?.DOCUMENTS && (
+      {!user?.STATE_DOCUMENTS && (
         <div className="w-[100%] md:w-[70%] flex items-center justify-center gap-3 m-auto bg-orange-500 text-white font-bold rounded-full p-5">
           <div>
             <AiFillWarning size={25} />
@@ -66,7 +66,7 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
       <div className="flex flex-col items-center gap-2 mt-5">
         <h3 className="font-bold">Documentos:</h3>
 
-        {!user?.DOCUMENTS && (
+        {!user?.STATE_DOCUMENTS && (
           <>
             <p>No tiene documentos</p>
             <p className="text-sm">
@@ -85,13 +85,13 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
               <Icon size={70} />
               <div className="flex justify-center items-center gap-2">
                 {text}
-                {(documents?.[idx] || user?.DOCUMENTS) && <AiOutlineFileDone className="text-green-500 text-2xl" />}
+                {documents?.[idx] || user?.STATE_DOCUMENTS ? <AiOutlineFileDone className="text-green-500 text-2xl" /> : null}
               </div>
             </label>
           ))}
         </div>
 
-        {!user.DOCUMENTS && (
+        {!user.STATE_DOCUMENTS && (
           <>
             <div style={{ display: "none" }}>
               <input type="file" id="cedulaInput" accept=".pdf" onChange={(e) => handleFileChange(e, 0)} />
@@ -103,22 +103,22 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
           </>
         )}
 
-        {user.DOCUMENTS && (
+        {user.STATE_DOCUMENTS ? (
           <>
-            {!user.VERIFIED_DOCUMENTS && (
+            {user.STATE_DOCUMENTS === 3 && (
               <>
-                <div>En estos momentos estamos revisando tus documentos, por favor, ten un poco de paciencia...</div>
+                <div>En estos momentos estamos asignando una revisión para tus documentos, por favor, ten un poco de paciencia...</div>
                 <Lottie style={{ width: "70%" }} animationData={animationDocuments} />
               </>
             )}
 
-            {user.VERIFIED_DOCUMENTS === 2 && (
+            {user.STATE_DOCUMENTS === 2 && (
               <div className="bg-red-500 py-2 px-4 rounded-2xl text-white text-sm">Sus documentos han sido rechazados, por favor, revisar su correo electrónico para mayor información.</div>
             )}
 
-            {user.VERIFIED_DOCUMENTS === 1 && <div className="bg-green-500 py-2 px-4 rounded-2xl text-white text-sm">Felicidades, sus documentos cumplen con los requisitos especificados.</div>}
+            {user.STATE_DOCUMENTS === 1 && <div className="bg-green-500 py-2 px-4 rounded-2xl text-white text-sm">Felicidades, sus documentos cumplen con los requisitos especificados.</div>}
           </>
-        )}
+        ) : null}
       </div>
     </div>
   );

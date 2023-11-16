@@ -16,7 +16,7 @@ export type Driver = {
   CEDULE: string;
   CITY: string;
   COMPLETED_RACES: number;
-  DOCUMENTS: number;
+  STATE_DOCUMENTS: number;
   EMAIL: string;
   NAMES: string;
   PHONE: string;
@@ -26,3 +26,21 @@ export type Driver = {
   SURNAMES: string;
   VERIFIED_DOCUMENTS: number;
 };
+
+export interface FieldClient {
+  name: "USERNAME" | "CEDULE" | "EMAIL";
+  label: string;
+  disabled?: boolean;
+}
+
+export interface FieldDefaultClient {
+  USERNAME: string;
+  CEDULE: string;
+  EMAIL: string;
+  PAYMENT_METHOD?: number;
+}
+
+export interface PaymentMethods {
+  id: number;
+  name: string;
+}
