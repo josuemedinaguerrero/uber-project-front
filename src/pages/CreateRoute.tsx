@@ -28,7 +28,7 @@ const CreateRoute = () => {
   useEffect(() => {
     if (!location.state?.resCreateRoute?.CEDULE) navigate("/");
 
-    axios.get(`${urlServer}/review/${location.state?.resCreateRoute?.ID_ROUTE}`).then((res) => setHasComment(res.data?.data?.ROUTE));
+    // axios.get(`${urlServer}/review/${location.state?.resCreateRoute?.ID_ROUTE}`).then((res) => setHasComment(res.data?.data?.ROUTE));
   }, []);
 
   const handleCancelRoute = () => onSubmit({ cancellation: watch("cancellation") });
@@ -117,7 +117,7 @@ const CreateRoute = () => {
               </ul>
             </div>
           </div>
-          <img className="w-[30%]" src="/images/carro1.png" />
+          <img className="w-[30%]" src={`http://192.168.1.6:5000/car/image/${location.state?.resCreateRoute?.CEDULE}`} />
         </div>
       </div>
 

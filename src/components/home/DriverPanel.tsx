@@ -1,11 +1,13 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 import Button from "../Button";
 import animationDocuments from "../../assets/documents.json";
+import Input from "../Input";
 
 import { urlServer } from "../../utils/constants";
 import { Driver } from "../../types/types";
 
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { AiFillWarning, AiOutlineIdcard, AiFillCar, AiOutlineFileDone } from "react-icons/ai";
 import { GrLicense } from "react-icons/gr";
 
@@ -19,6 +21,14 @@ interface DriverPanelInterface {
 
 const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
   const [documents, setDocuments] = useState<File[]>([]);
+  const [imageProfile, setImageProfile] = useState<File | null>();
+  const [storedVehicle, setStoredVehicle] = useState(false);
+
+  const { register, handleSubmit } = useForm<FieldValues>({ defaultValues: { cedule: "", password: "" } });
+
+  useEffect(() => {
+    axios.get(`${urlServer}/car/${user.CEDULE}`).then((res) => setStoredVehicle(res.data?.data?.DRIVER));
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
     const file = event.target.files?.[0];
@@ -51,6 +61,39 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
     toast.success(data?.message, { duration: 8000 });
     localStorage.setItem("user", JSON.stringify({ ...user, DOCUMENTS: 1 }));
   }, [documents, user]);
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      const formData = new FormData();
+      console.log({ data });
+
+      formData.append("plate", data?.plate);
+      formData.append("color", data?.color);
+      formData.append("cedule", user.CEDULE);
+      imageProfile && formData.append("image", imageProfile);
+
+      const res = await axios.post(`${urlServer}/upload-car`, formData);
+
+      if (res.data?.error) throw new Error(res.data?.message);
+
+      toast.success(res.data?.message);
+      setStoredVehicle(true);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const handleImageClick = () => {
+    const fileInput = document.getElementById("fileInput");
+    fileInput!.click();
+  };
+
+  const handleImageUpload = useCallback(async (event: any) => {
+    try {
+      const file = event?.target?.files[0];
+      setImageProfile(file);
+    } catch (_) {}
+  }, []);
 
   return (
     <div className="mt-10">
@@ -113,10 +156,43 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
             )}
 
             {user.STATE_DOCUMENTS === 2 && (
-              <div className="bg-red-500 py-2 px-4 rounded-2xl text-white text-sm">Sus documentos han sido rechazados, por favor, revisar su correo electrónico para mayor información.</div>
+              <div className="w-full">
+                <p className="bg-red-500 py-2 px-4 rounded-2xl text-white text-sm">Sus documentos han sido rechazados, por favor, revisar su correo electrónico para mayor información.</p>
+
+                <div className="mt-10">
+                  <h3>Ahora, por favor, suba la información de su vehículo</h3>
+                </div>
+              </div>
             )}
 
-            {user.STATE_DOCUMENTS === 1 && <div className="bg-green-500 py-2 px-4 rounded-2xl text-white text-sm">Felicidades, sus documentos cumplen con los requisitos especificados.</div>}
+            {user.STATE_DOCUMENTS === 1 && (
+              <div className="w-full flex flex-col items-center">
+                <p className="bg-green-500 max-w-[600px] py-2 text-center px-4 rounded-2xl text-white text-sm">Felicidades, sus documentos cumplen con los requisitos especificados.</p>
+
+                {!storedVehicle && (
+                  <div className="mt-10 w-[80%]">
+                    <h3 className="text-center">Ahora, por favor, deberá subir la información de su vehículo, así como una fotografía.</h3>
+
+                    <form className="w-full flex flex-col items-center gap-5 mt-5" onSubmit={handleSubmit(onSubmit)}>
+                      <Input register={register} placeholder="Número de placa" required name="plate" />
+                      <Input register={register} placeholder="Color" required name="color" />
+
+                      <div className="max-w-[500px] h-[300px]">
+                        <input id="fileInput" className="hidden" type="file" accept="image/*" onChange={handleImageUpload} />
+                        <img
+                          onClick={handleImageClick}
+                          className="w-full h-full object-cover object-center"
+                          src={imageProfile ? URL.createObjectURL(imageProfile) : "./images/default_driver.jpg"}
+                          alt="image profile"
+                        />
+                      </div>
+
+                      <Button text="Guardar" type="submit" />
+                    </form>
+                  </div>
+                )}
+              </div>
+            )}
           </>
         ) : null}
       </div>
