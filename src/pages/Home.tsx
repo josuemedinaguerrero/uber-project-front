@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import DriverPanel from "../components/home/DriverPanel";
 import ClientPanel from "../components/home/ClientPanel";
+import AdminPanel from "../components/home/AdminPanel";
 
 import { Driver, Roles } from "../types/types";
 
@@ -15,7 +16,8 @@ const Home = () => {
       return <ClientPanel />;
     case "DRIVER":
       return <DriverPanel user={user as Driver} />;
-
+    case "ADMIN":
+      return <AdminPanel />;
     default:
       break;
   }

@@ -38,7 +38,7 @@ const Navbar = () => {
   useEffect(() => {
     if (user?.ROL) {
       switch (user.ROL) {
-        case "ADMIN ":
+        case "ADMIN":
           axios.get(`${urlServer}/drivers`).then((res) => {
             setPendingDocuments(res?.data?.filter((d: Driver) => d.STATE_DOCUMENTS === 3)?.length);
           });

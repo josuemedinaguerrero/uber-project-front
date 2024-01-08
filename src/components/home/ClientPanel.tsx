@@ -5,14 +5,15 @@ import Button from "../Button";
 import CustomCarousel from "../CustomCarousel";
 import animationMap from "../../assets/map.json";
 
+import { urlServer } from "../../utils/constants";
+import { Driver, User } from "../../types/types";
+
 import { Marker, MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
 import Lottie from "lottie-react";
 import axios from "axios";
-import { urlServer } from "../../utils/constants";
-import { Driver, User } from "../../types/types";
 import moment from "moment";
 
 type Session = User & Driver;
@@ -29,7 +30,6 @@ const ClientPanel = () => {
   const [routes, setRoutes] = useState([]);
 
   const navigate = useNavigate();
-
   const userLocal = localStorage.getItem("user");
 
   const user: Session = useMemo(() => {
@@ -53,6 +53,13 @@ const ClientPanel = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       setUserLocation((prev) => ({ ...prev, startLocation: [position.coords.latitude, position.coords.longitude], endLocation: null }));
     });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${urlServer}/security-alerts`)
+      .then((res) => toast.success(res.data?.[Math.floor(Math.random() * res.data?.length)]?.ALERT_DESCRIPTION, { duration: 8000 }))
+      .catch(() => toast.error("Hubo un error al obtener las alertas de seguridad."));
   }, []);
 
   const HandleMapClick = () => {
@@ -98,6 +105,8 @@ const ClientPanel = () => {
 
       const res = await axios.post(`${urlServer}/create-route`, formData);
       if (res.data?.error) throw new Error(res.data?.message);
+
+      localStorage.removeItem("comment");
 
       toast.success(`Su destino tiene una distancia de ${getTime.distanceKm}Km con un tiempo aproximado de ${getTime.timeM} minutos`, { duration: 8000 });
       navigate(`/route/${res.data?.data?.ID_ROUTE}`, { state: { time: timeDriver, resCreateRoute: { ...res.data?.data, TIME_LIMIT: date } } });

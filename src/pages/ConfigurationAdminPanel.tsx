@@ -1,11 +1,14 @@
-import toast from "react-hot-toast";
-import Input from "../components/Input";
+import { useEffect, useState } from "react";
+
+import Button from "../components/Button";
+
+import { urlServer } from "../utils/constants";
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Button from "../components/Button";
-import { useEffect, useState } from "react";
+
 import axios from "axios";
-import { urlServer } from "../utils/constants";
+import toast from "react-hot-toast";
+import Input from "../components/Input";
 
 const ConfigurationAdminPanel = () => {
   const [securityAlerts, setSecurityAlerts] = useState<{}[]>([]);

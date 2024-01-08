@@ -16,9 +16,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const CreateRoute = () => {
+  const [hasComment, setHasComment] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(10);
-  const [hasComment, setHasComment] = useState(false);
 
   const { register, watch, handleSubmit } = useForm<FieldValues>();
 
@@ -64,6 +64,7 @@ const CreateRoute = () => {
 
       if (res[0].data?.error || res[1].data?.error) throw new Error(res[0].data?.message || res[1].data?.message);
 
+      localStorage.setItem("comment", "T");
       setHasComment(true);
       toast.success("Gracias por calificar tu viaje, nos servirá mucho tu comentario");
     } catch (error: any) {
@@ -117,11 +118,11 @@ const CreateRoute = () => {
               </ul>
             </div>
           </div>
-          <img className="w-[30%]" src={`http://192.168.1.6:5000/car/image/${location.state?.resCreateRoute?.CEDULE}`} />
+          <img className="w-[30%]" src={`${urlServer}/car/image/${location.state?.resCreateRoute?.CEDULE}`} />
         </div>
       </div>
 
-      {!hasComment && (
+      {!hasComment && !localStorage.getItem("comment") && (
         <div className="mt-5 flex flex-col gap-5 items-center">
           <h2 className="font-bold">CALIFICA TU VIAJE!!!</h2>
 

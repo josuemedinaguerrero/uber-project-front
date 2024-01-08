@@ -158,10 +158,6 @@ const DriverPanel: React.FC<DriverPanelInterface> = ({ user }) => {
             {user.STATE_DOCUMENTS === 2 && (
               <div className="w-full">
                 <p className="bg-red-500 py-2 px-4 rounded-2xl text-white text-sm">Sus documentos han sido rechazados, por favor, revisar su correo electrónico para mayor información.</p>
-
-                <div className="mt-10">
-                  <h3>Ahora, por favor, suba la información de su vehículo</h3>
-                </div>
               </div>
             )}
 
